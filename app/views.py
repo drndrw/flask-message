@@ -22,9 +22,10 @@ class Users(Resource):
     def post(self):
         data = request.get_json()
         print (data)
-        if data['username'] and data['password'] and data['email']:
+        if data['username'] and data['password'] and data['email'] and data['first_name'] \
+            and data['last_name']:
             try:
-                newuser = models.User(data['username'],data['password'],data['email'])
+                newuser = models.User(data['username'],data['password'],data['email'],data['first_name'],data['last_name'])
                 db.session.add(newuser)
                 db.session.commit()
                 return {'status':'Successfully created {}.'.format(data['username'])}
@@ -50,6 +51,12 @@ class UserQuery(Resource):
             return {'username': authuser.username, 'id': authuser.id}
         else:
             return {'error': 'Invalid user id.'}
+
+class MessagesRecieved(Resource):
+
+    @jwt_required()
+    def get(self):
+        print (current_identity)
 
 api.add_resource(Users,'/user')
 api.add_resource(UserQuery,'/user/<userid>')
