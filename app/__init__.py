@@ -1,6 +1,9 @@
 #FLASK SETTINGS
-from flask import Flask
+from flask import Flask, jsonify
 app = Flask(__name__)
+
+#CONFIGURATION SETTINGS
+app.config.from_object('app.config.dev_config')
 
 #API SETTINGS
 from flask_restful import Resource, Api
@@ -14,4 +17,23 @@ db = SQLAlchemy(app)
 from flask.ext.bcrypt import Bcrypt
 bcrypt = Bcrypt(app)
 
-from app import views
+from app import views, models
+
+#JWT SETTINGS
+from flask_jwt import JWT, jwt_required, current_identity
+
+def authenticate(username, password):
+    authuser = models.User.validate(username, password)
+    if authuser['status'] is True:
+        return authuser['user']
+
+def identity(payload):
+    user_id = payload['identity']
+    return user_id
+
+jwt = JWT(app, authenticate, identity)
+
+@app.route('/protected')
+@jwt_required()
+def protected_stuff():
+    return jsonify({'status':'You made it','id': int(current_identity)})
