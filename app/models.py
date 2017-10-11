@@ -1,5 +1,6 @@
 from app import app, bcrypt, db
 from flask import jsonify
+import datetime
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -26,6 +27,25 @@ class User(db.Model):
                 return {'status': False, 'failed': 'Invalid password.'}
         except:
             return {'status': False, 'failed': 'Invalid username.'}
+
+class Messages(db.Model):
+    __tablename__ = 'messages'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    sender = db.Column(db.Integer)
+    title = db.Column(db.String(255))
+    body = db.Column(db.UnicodeText)
+    time = db.Column(db.Time)
+    date = db.Column(db.Date)
+
+    def __init__(self, sender, title, body, id=None, time=datetime.datetime.now().time(), \
+        date=datetime.datetime.now().date()):
+        self.sender = sender
+        self.title = title
+        self.body = body
+        self.id = id
+        self.time = time
+        self.date = date
 
 @app.route('/create')
 def create_tables():

@@ -1,5 +1,6 @@
 from flask import jsonify, request
 from flask_restful import Resource, Api
+from flask_jwt import JWT, jwt_required, current_identity
 from app import api, app, db, models
 
 
@@ -9,6 +10,7 @@ def apptest():
 
 class Users(Resource):
 
+    @jwt_required()
     def get(self):
         users = models.User.query.all()
         if users:
@@ -31,16 +33,17 @@ class Users(Resource):
         else:
             return {'error':'Please enter all required fields.'}
 
-    def put(self):
-        data = request.get_json()
-        response = models.User.validate(data['username'], data['password'])
-        if response['status']:
-            return {'status':'Logged in.', 'userid': response['credentials']}
-        else:
-            return {'error':'Invalid credentials.', 'reason': response['failed']}
+    # def put(self):
+    #     data = request.get_json()
+    #     response = models.User.validate(data['username'], data['password'])
+    #     if response['status']:
+    #         return {'status':'Logged in.', 'userid': response['credentials']}
+    #     else:
+    #         return {'error':'Invalid credentials.', 'reason': response['failed']}
 
 class UserQuery(Resource):
 
+    @jwt_required()
     def get(self, userid):
         authuser = models.User.query.filter_by(id=userid).first()
         if authuser:
