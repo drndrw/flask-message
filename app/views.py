@@ -10,7 +10,7 @@ def apptest():
 
 class Users(Resource):
 
-    @jwt_required()
+    # @jwt_required()
     def get(self):
         users = models.User.query.all()
         if users:

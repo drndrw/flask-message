@@ -9,6 +9,7 @@ class User(db.Model):
     username = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
     email = db.Column(db.String(255), unique=True)
+    user_messages = db.relationship('Messages')
 
     def __init__(self, username, password, email, id=None):
         self.username = username
@@ -32,7 +33,7 @@ class Messages(db.Model):
     __tablename__ = 'messages'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    sender = db.Column(db.Integer)
+    sender = db.Column(db.Integer, db.ForeignKey('user.id'))
     title = db.Column(db.String(255))
     body = db.Column(db.UnicodeText)
     time = db.Column(db.Time)
@@ -46,6 +47,10 @@ class Messages(db.Model):
         self.id = id
         self.time = time
         self.date = date
+
+# class MessagesRecipients(db.Model):
+#     __tablename__ = 'messages_recipients'
+
 
 @app.route('/create')
 def create_tables():
