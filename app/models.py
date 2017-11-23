@@ -47,14 +47,15 @@ class Messages(db.Model):
     date = db.Column(db.Date, nullable=False)
     messages_messagesrecipients = db.relationship('MessagesRecipients')
 
-    def __init__(self, sender, title, body, id=None, time=datetime.datetime.now().time(), \
-        date=datetime.datetime.now().date()):
+    def __init__(self, sender, title, body, id=None, time=datetime.datetime.now().time(), date=datetime.datetime.now().date()):
         self.sender = sender
         self.title = title
         self.body = body
         self.id = id
         self.time = time
         self.date = date
+
+        # return self.id
 
 class MessagesRecipients(db.Model):
     __tablename__ = 'messages_recipients'

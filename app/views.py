@@ -52,6 +52,30 @@ class UserQuery(Resource):
         else:
             return {'error': 'Invalid user id.'}
 
+class Message(Resource):
+
+    @jwt_required()
+    def post(self):
+        data = request.get_json()
+        if data['title'] and data['body'] and data['recipients']:
+            try:
+                newmessage = models.Messages(str(current_identity), data['title'], data['body'])
+                db.session.add(newmessage)
+                db.session.commit()
+                for recipient in data['recipients']:
+                    newrecipient = models.MessagesRecipients(newmessage.id, recipient)
+                    db.session.add(newrecipient)
+                db.session.commit()
+                return {'status':'Message {} has been sent.'.format(newmessage.id)}
+            except Exception as e:
+                return {'error':'An error has occured.','info':str(e)}
+        else:
+            return {'error':'Please enter all required fields.'}
+
+    # @jwt_required()
+    # def get(self):
+        #Write a JOIN for for pulling from message_recieved and messages from the user ID from current_identiy
+
 class MessagesRecieved(Resource):
 
     @jwt_required()
@@ -60,3 +84,5 @@ class MessagesRecieved(Resource):
 
 api.add_resource(Users,'/user')
 api.add_resource(UserQuery,'/user/<userid>')
+api.add_resource(Message,'/messages')
+api.add_resource(MessagesRecieved,'/messages/recieved')

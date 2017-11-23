@@ -6,9 +6,9 @@ class config(object):
 class dev_config(config):
 
     SECRET_KEY = os.getenv('SECRET_KEY','awskey')
-    ENGINE = 'mysql+pymysql'
-    USERNAME = 'root'
-    PASSWORD = 'QaWsEd179'
-    HOST = 'localhost'
-    DBNAME = 'react_flask'
+    ENGINE = os.getenv('DB_ENGINE','mysql+pymysql')
+    USERNAME = os.getenv('DB_USERNAME','root')
+    PASSWORD = os.getenv('DB_PASSWORD','password')
+    HOST = os.getenv('DB_HOST','localhost')
+    DBNAME = os.getenv('DB_NAME','react_flask')
     SQLALCHEMY_DATABASE_URI = '{}://{}:{}@{}/{}'.format(ENGINE,USERNAME,PASSWORD,HOST,DBNAME)
