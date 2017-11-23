@@ -4,13 +4,13 @@ from flask_jwt import JWT, jwt_required, current_identity
 from app import api, app, db, models
 
 
-@app.route('/')
-def apptest():
-    return jsonify({'test':'hey'})
+# @app.route('/')
+# def apptest():
+#     return jsonify({'test':'hey'})
 
 class Users(Resource):
 
-    # @jwt_required()
+    @jwt_required()
     def get(self):
         users = models.User.query.all()
         if users:
@@ -55,6 +55,11 @@ class UserQuery(Resource):
 class Message(Resource):
 
     @jwt_required()
+    def get(self):
+        #Return list of messages recieved for a given user
+        print (current_identity)
+
+    @jwt_required()
     def post(self):
         data = request.get_json()
         if data['title'] and data['body'] and data['recipients']:
@@ -72,17 +77,6 @@ class Message(Resource):
         else:
             return {'error':'Please enter all required fields.'}
 
-    # @jwt_required()
-    # def get(self):
-        #Write a JOIN for for pulling from message_recieved and messages from the user ID from current_identiy
-
-class MessagesRecieved(Resource):
-
-    @jwt_required()
-    def get(self):
-        print (current_identity)
-
 api.add_resource(Users,'/user')
 api.add_resource(UserQuery,'/user/<userid>')
 api.add_resource(Message,'/messages')
-api.add_resource(MessagesRecieved,'/messages/recieved')
