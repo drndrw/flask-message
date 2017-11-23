@@ -32,8 +32,3 @@ def identity(payload):
     return user_id
 
 jwt = JWT(app, authenticate, identity)
-
-@app.route('/protected')
-@jwt_required()
-def protected_stuff():
-    return jsonify({'status':'You made it','id': int(current_identity)})
