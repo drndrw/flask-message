@@ -55,8 +55,6 @@ class Messages(db.Model):
         self.time = time
         self.date = date
 
-        # return self.id
-
 class MessagesRecipients(db.Model):
     __tablename__ = 'messages_recipients'
 
@@ -71,6 +69,7 @@ class MessagesRecipients(db.Model):
         self.id = id
         self.read = read
 
+#Populate database with tables. NOT FOR PRODUCTION ENVIRONMENT
 @app.route('/create')
 def create_tables():
     try:
